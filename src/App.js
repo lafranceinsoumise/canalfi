@@ -7,6 +7,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {};
+    // The day start time is midnight
     this.startTime = Math.round(new Date(new Date().setHours(0, 0, 0, 0)).getTime()/1000);
     this.videoLoop = this.videoGenerator();
   }
@@ -16,6 +17,7 @@ class App extends Component {
     this.setState({setLoaded: true});
   }
 
+  // This generator gives an infitite iterator over the set list of video.
   * videoGenerator() {
     while (true) {
       yield* this.set;
@@ -28,6 +30,8 @@ class App extends Component {
     let video;
     let startTime = Math.round(new Date().getTime()/1000) - this.startTime;
 
+    // We find at which video and at what time,
+    // This depends on the day startTime and the duration of each video
     do {
       if (video) startTime = startTime - video.duration; // previous video
 
