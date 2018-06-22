@@ -1,15 +1,17 @@
 import React, { Component } from 'react';
+import getYT from './loadYT';
 import './Player.css';
 
 class Player extends Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {videoId: props.videoId, start: props.start};
     this.getNextVideo = props.getNextVideo;
   }
 
-  loadPlayer() {
-    this.player = new window.YT.Player('ytplayer', {
+  async loadPlayer() {
+    const YT = await getYT();
+    this.player = new YT.Player('ytplayer', {
       videoId: this.state.videoId,
       playerVars: {
         rel: 0,
@@ -21,7 +23,7 @@ class Player extends Component {
       },
       events: {
         onStateChange: event => {
-          if (event.data === window.YT.PlayerState.ENDED) {
+          if (event.data === YT.PlayerState.ENDED) {
             this.player.loadVideoById(this.getNextVideo());
           }
         }
@@ -36,7 +38,7 @@ class Player extends Component {
   render() {
     return (
       <div className="video-container">
-        <div id="ytplayer"></div>
+        <div id="ytplayer" />
       </div>
     );
   }
