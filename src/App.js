@@ -1,46 +1,39 @@
 import React, { Component } from 'react';
 import './App.css';
 import Player from './Player';
+import Schedule from './Schedule';
 import yaml from 'js-yaml';
+import {from} from 'rxjs';
+import {setObservableConfig} from 'recompose';
+
+import '@fortawesome/fontawesome-free/css/all.css';
+import 'react-rangeslider/umd/rangeslider.css';
+
+
+setObservableConfig({
+  fromESObservable: from,
+  toESObservable: a => a
+});
+
+
 
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
-    // The day start time is midnight
-    this.startTime = Math.round(new Date(new Date().setHours(0, 0, 0, 0)).getTime()/1000);
-    this.videoLoop = this.videoGenerator();
+    this.state = {schedule: null};
   }
 
   async componentDidMount() {
-    this.set = yaml.safeLoad(await (await fetch('set.yml')).text());
-    this.setState({setLoaded: true});
-  }
-
-  // This generator gives an infitite iterator over the set list of video.
-  * videoGenerator() {
-    while (true) {
-      yield* this.set;
-    }
+    const schedule = new Schedule(yaml.safeLoad(await (await fetch('set.yml')).text()));
+    this.setState({schedule});
   }
 
   render() {
-    if (!this.state.setLoaded) return null;
-
-    let video;
-    let startTime = Math.round(new Date().getTime()/1000) - this.startTime;
-
-    // We find at which video and at what time,
-    // This depends on the day startTime and the duration of each video
-    do {
-      if (video) startTime = startTime - video.duration; // previous video
-
-      video = this.videoLoop.next().value;
-    } while ((startTime - video.duration) > 0);
+    if (!this.state.schedule) return null;
 
     return (
       <div>
-        <Player videoId={video.id} start={startTime} getNextVideo={() => this.videoLoop.next().value.id}/>
+        <Player schedule={this.state.schedule} />
       </div>
     );
   }

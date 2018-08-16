@@ -1,4 +1,26 @@
-- id: dQw4w9WgXcQ
-  duration: 210
-- id: EErY75MXYXI
-  duration: 86400
+referenceDate: 2018-07-11 16:00:00
+schedule:
+  - id: CzzZyGwax6c
+    duration: PT10M35S
+  - id: gsA1uhvUAio
+    duration: PT14M35S
+  - id: 6BfwSxqNcW0
+    duration: PT16M12S
+  - id: l-STIBXhZpI
+    duration: PT15M42S
+  - id: r08K243axo0
+    duration: PT12M5S
+  - id: 04ESAjtH8gY
+    duration: PT12M58S
+  - id: 3oWKtdGxj_I
+    duration: PT13M4S
+  - id: eWdUdO37o2k
+    duration: PT12M21S
+  - id: 4Sq_QlS-yes
+    duration: PT16M2S
+  - id: _-zdvW14X1k
+    duration: PT8M30S
+  - id: 5SNkh3KQtf0
+    duration: PT15M58S
+  - id: azObwVDific
+    duration: PT18M27S

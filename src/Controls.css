@@ -1,0 +1,89 @@
+.controls {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    z-index: 1000;
+    background-color: rgba(50%, 50%, 50%, 0.5);
+    opacity: 0;
+    transition: opacity 500ms;
+}
+
+.controls.shown {
+    opacity: 1;
+}
+
+.controls .rangeslider .rangeslider__labels {
+    display: none;
+}
+
+.controls__buttons {
+    z-index: 1000;
+    color: #DDD
+}
+
+.controls__buttons * {
+    font: 16px/1.5 sans-serif ;
+    display: inline-block;
+}
+
+.controls__buttons button {
+    background: none;
+    border: none;
+    padding: 10px;
+    width: 44px;
+    color: #DDD
+}
+
+.controls__buttons button:hover {
+    color: #FFF;
+}
+
+.volume-control .rangeslider {
+    border-radius: 0;
+    width: 100px;
+    height: 12px;
+    margin: 16px 10px;
+}
+
+.volume-control .rangeslider .rangeslider__fill {
+    border-radius: 0;
+}
+
+.volume-control .rangeslider .rangeslider__handle {
+    border-radius: 0;
+    width: 6px;
+    height: 20px;
+    left: 3px;
+}
+
+.volume-control .rangeslider .rangeslider__handle:after {
+    content: none;
+}
+
+.progress-bar .rangeslider-horizontal {
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+    margin: 0;
+}
+
+.progress-bar .rangeslider .rangeslider__fill {
+    border-radius: 0;
+    background-color: #C9462C;
+}
+
+.progress-bar .rangeslider .rangeslider__handle {
+    display:none;
+}
+
+.progress-bar .input-range__label-container {
+    display: none;
+}
+
+.volume-control {
+    display: inline-flex;
+}
+
+.volume-control .volume-slider.off {
+    display: none;
+}

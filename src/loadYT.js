@@ -27,7 +27,7 @@ async function loadYT() {
 
 let YTPromise = null;
 
-export function getYT() {
+export default function getYT() {
   if (!YTPromise) {
     YTPromise = loadYT();
   }
