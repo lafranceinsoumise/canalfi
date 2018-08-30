@@ -57,16 +57,16 @@ function addPropsStream(transform, combiner) {
 
 const withLoadedPlayer = addPropsStream(
   props$ => props$.pipe(
-    pluck('player'),
+    pluck('controler'),
     distinctUntilChanged(),
     filter(p => p !== null),
-    switchMap(p => from(p.ready).pipe(mapTo({player: p}))),
+    switchMap(p => from(p.ready).pipe(mapTo({controler: p}))),
   ),
 );
 
 const withCurrentState = addPropsStream(
   props$ => props$.pipe(
-    switchMap(props => props.player.state$),
+    switchMap(props => props.controler.state$),
     map(state => ({state}))
   ),
 );
@@ -74,7 +74,7 @@ const withCurrentState = addPropsStream(
 const withTiming = (samplingPeriod = 500) => addPropsStream(props$ =>
   props$.pipe(
     sample(
-      props => ({currentTime: props.player.getCurrentTime(), duration: props.player.getDuration()}), samplingPeriod
+      props => ({currentTime: props.controler.getCurrentTime(), duration: props.controler.getDuration()}), samplingPeriod
     )
   ),
 );
@@ -82,7 +82,7 @@ const withTiming = (samplingPeriod = 500) => addPropsStream(props$ =>
 const withVolume = (samplingPeriod = 1000) => addPropsStream(
   props$ => merge(
     props$.pipe(
-      sample(props => ({volume: props.player.getVolume(), muted: props.player.isMuted()}), samplingPeriod),
+      sample(props => ({volume: props.controler.getVolume(), muted: props.controler.isMuted()}), samplingPeriod),
     ),
   )
 );
@@ -239,14 +239,14 @@ VolumeControl.propTypes = {
 };
 
 
-function ControlBar({player, state, volume, muted, currentTime, duration, shown, onMouseEnter, onMouseLeave}) {
+function ControlBar({controler, state, volume, muted, currentTime, duration, shown, onMouseEnter, onMouseLeave}) {
   return <div className={`controls ${shown ? 'shown': 'hidden'}`} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
-    <PositionBar currentTime={currentTime} duration={duration} seekTo={player.seekTo}/>
+    <PositionBar currentTime={currentTime} duration={duration} seekTo={controler.seekTo}/>
     <div className="controls__buttons">
-      <PlayPauseButton playing={[1, 3].includes(state)} playVideo={player.playVideo} pauseVideo={player.pauseVideo}/>
-      <VolumeControl volume={volume} muted={muted} mute={player.mute} unMute={player.unMute} setVolume={player.setVolume}/>
+      <PlayPauseButton playing={[1, 3].includes(state)} playVideo={controler.playVideo} pauseVideo={controler.pauseVideo}/>
+      <VolumeControl volume={volume} muted={muted} mute={controler.mute} unMute={controler.unMute} setVolume={controler.setVolume}/>
       <Timer currentTime={currentTime} duration={duration}/>
-      <button type="button" id="full-screen" onClick={player.setFullscreen}>
+      <button type="button" id="full-screen" onClick={controler.setFullscreen}>
         <i className="fas fa-expand" />
       </button>
     </div>
@@ -254,7 +254,7 @@ function ControlBar({player, state, volume, muted, currentTime, duration, shown,
 }
 
 ControlBar.propTypes = {
-  player: PropTypes.object,
+  controler: PropTypes.object,
   state: PropTypes.number,
   volume: PropTypes.number,
   muted: PropTypes.bool,

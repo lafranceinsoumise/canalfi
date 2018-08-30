@@ -20,9 +20,9 @@ function fullScreen(id) {
 }
 
 
-class PlayerController {
-  constructor(id, schedule) {
-    this.id = id;
+class YTAPIController {
+  constructor(elemId, schedule) {
+    this.elemId = elemId;
     let signalReady;
     const {handler: stateHandler, stream: state$} = createEventHandler();
 
@@ -57,7 +57,7 @@ class PlayerController {
   }
 
   setFullscreen() {
-    fullScreen(this.id);
+    fullScreen(this.elemId);
   }
 
   async load(signalReady, stateHandler) {
@@ -69,7 +69,7 @@ class PlayerController {
 
     const videoId = this.schedule.getYTId(programIndex);
 
-    window.YTPlayer = this._YTplayer = new YT.Player(this.id, {
+    window.YTPlayer = this._YTplayer = new YT.Player(this.elemId, {
       videoId,
       playerVars: {
         rel: 0,
@@ -133,20 +133,19 @@ class PlayerController {
 class PlayerComponent extends Component {
   constructor(props) {
     super(props);
-    this.state = {player: null};
+    this.state = {controler: null};
   }
 
   async componentDidMount() {
-    const player = new PlayerController('ytplayer', this.props.schedule);
-    this.setState({player});
-    await player.ready;
+    const controler = new YTAPIController('ytplayer', this.props.schedule);
+    this.setState({controler});
   }
 
   render() {
     return (
-      <div className="video-container">
+      <div className="video-container" id="player">
         <div id="ytplayer"/>
-        <Controls player={this.state.player}/>
+        <Controls controler={this.state.controler}/>
       </div>
     );
   }
