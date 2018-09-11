@@ -24,7 +24,7 @@ class App extends Component {
   }
 
   async componentDidMount() {
-    const schedule = new Schedule(yaml.safeLoad(await (await fetch('set.yml')).text()));
+    const schedule = new Schedule(yaml.safeLoad(await (await fetch(process.env.REACT_APP_SCHEDULE_URL)).text()));
     this.setState({schedule});
   }
 

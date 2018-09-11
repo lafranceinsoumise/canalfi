@@ -1,0 +1,71 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-09-11 14:06+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: canal/admin.py:30
+msgid "Auto re-schedule"
+msgstr "Re-programmation automatique"
+
+#: canal/models.py:7
+msgid "video ID"
+msgstr "identifiant de la vidéo"
+
+#: canal/models.py:8
+msgid "Youtube etag"
+msgstr "Etag Youtube"
+
+#: canal/models.py:9
+msgid "Youtube title"
+msgstr "titre Youtube"
+
+#: canal/models.py:10
+msgid "Youtube description"
+msgstr "description Youtube"
+
+#: canal/models.py:11
+msgid "duration"
+msgstr "durée"
+
+#: canal/models.py:17
+msgid "video"
+msgstr "vidéo"
+
+#: canal/models.py:18 canal/models.py:29
+msgid "videos"
+msgstr "vidéos"
+
+#: canal/models.py:28
+msgid "name"
+msgstr "nom"
+
+#: canal/models.py:30
+msgid "starting time"
+msgstr "début"
+
+#: canal/models.py:35
+msgid "end date"
+msgstr "fin"
+
+#: canal/models.py:42
+msgid "list"
+msgstr "liste"
+
+#: canal/models.py:43
+msgid "lists"
+msgstr "listes"
