@@ -7,12 +7,12 @@ from canal.models import List
 
 class Schedule(View):
     def get(self, request):
-        schedule = List.objects.filter(start_date__lt=timezone.now()).prefetch_related('videos').first()
+        schedules = List.objects.filter(start_date__lt=timezone.now()).prefetch_related('videos')
 
         response = JsonResponse({
-            'referenceDate': schedule.start_date,
+            'referenceDate': schedules.first().start_date,
             'schedule': [
-                {'id': video.id, 'duration': video.duration} for video in schedule.videos.all()
+                {'id': video.id, 'duration': video.duration} for schedule in schedules for video in schedule.videos.all()
             ]
         })
         response["Access-Control-Allow-Origin"] = "*"
