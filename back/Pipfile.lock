@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "d3efd558509f0289fc3794d6767f99b54632897504fb23b0f43e29abd1261fdd"
+            "sha256": "71679f2a896628fdad6dbab3dc6e6e9d20b5e71f0a9834bf7483619b3927dd44"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -30,6 +30,10 @@
             ],
             "index": "pypi",
             "version": "==2.1.1"
+        },
+        "django-ordered-model": {
+            "git": "https://github.com/bfirsh/django-ordered-model",
+            "ref": "3b8768a2dc425f1d24ef0b03f56567db23257a52"
         },
         "google-api-python-client": {
             "hashes": [
@@ -104,10 +108,10 @@
         },
         "rsa": {
             "hashes": [
-                "sha256:25df4e10c263fb88b5ace923dd84bf9aa7f5019687b5e55382ffcdb8bede9db5",
-                "sha256:43f682fea81c452c98d09fc316aae12de6d30c4b5c84226642cf8f8fd1c93abd"
+                "sha256:14ba45700ff1ec9eeb206a2ce76b32814958a98e372006c8fb76ba820211be66",
+                "sha256:1a836406405730121ae9823e19c6e806c62bbad73f890574fff50efa4122c487"
             ],
-            "version": "==3.4.2"
+            "version": "==4.0"
         },
         "six": {
             "hashes": [

@@ -8,6 +8,7 @@ name = "pypi"
 [packages]
 django = "*"
 google-api-python-client = "*"
+django-ordered-model = {git = "https://github.com/bfirsh/django-ordered-model", ref = "3b8768a2dc425f1d24ef0b03f56567db23257a52"}
 
 [requires]
 python_version = "3.6"

@@ -16,7 +16,6 @@ def get_duration(sender, instance, **kwargs):
         part='contentDetails,snippet',
         id=instance.id
     ).execute()['items'][0]
-    print(video, flush=True)
 
     instance.duration = parse_duration(video['contentDetails']['duration'])
     instance.yt_title = video['snippet']['title']
