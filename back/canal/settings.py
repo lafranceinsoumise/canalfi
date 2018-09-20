@@ -119,5 +119,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.environ.get('STATIC_ROOT')
 
 YOUTUBE_API_KEY = os.environ.get('YOUTUBE_API_KEY', 'Define it in .env')
