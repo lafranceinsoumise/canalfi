@@ -2,7 +2,6 @@
   "name": "youtube",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://guilro.github.io/youtube-direct",
   "dependencies": {
     "js-yaml": "^3.12.0",
     "moment": "^2.22.2",
