@@ -20,5 +20,5 @@ from canal.views import Schedule
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^$', Schedule.as_view(), name='schedule')
+    url(r'^schedule/$', Schedule.as_view(), name='schedule')
 ]
