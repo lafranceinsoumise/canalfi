@@ -10,6 +10,7 @@ class Video(models.Model):
     yt_etag = models.CharField(_("Youtube etag"), max_length=255)
     yt_title = models.CharField(_("Youtube title"), max_length=100)
     yt_description = models.TextField(_("Youtube description"), max_length=5000)
+    yt_thumbnail = models.URLField(_("Youtube thumbnail"))
     duration = models.DurationField(_("duration"))
 
     def __str__(self):

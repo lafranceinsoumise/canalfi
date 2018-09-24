@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-19 13:27+0000\n"
+"POT-Creation-Date: 2018-09-24 16:05+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,17 +18,23 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: canal/admin.py:26
+#: canal/admin.py:19 canal/models.py:13
+#, fuzzy
+#| msgid "Youtube title"
+msgid "Youtube thumbnail"
+msgstr "miniature Youtube"
+
+#: canal/admin.py:32
 #, fuzzy
 #| msgid "duration"
 msgid "video duration"
 msgstr "durée"
 
-#: canal/admin.py:46
+#: canal/admin.py:52
 msgid "Auto re-schedule"
 msgstr "Re-programmation automatique"
 
-#: canal/admin.py:50 canal/models.py:13
+#: canal/admin.py:56 canal/models.py:14
 msgid "duration"
 msgstr "durée"
 
@@ -48,38 +54,38 @@ msgstr "titre Youtube"
 msgid "Youtube description"
 msgstr "description Youtube"
 
-#: canal/models.py:19
+#: canal/models.py:20
 msgid "video"
 msgstr "vidéo"
 
-#: canal/models.py:20 canal/models.py:45
+#: canal/models.py:21 canal/models.py:46
 msgid "videos"
 msgstr "vidéos"
 
-#: canal/models.py:32
+#: canal/models.py:33
 msgid "listed program"
 msgstr "programme"
 
-#: canal/models.py:33
+#: canal/models.py:34
 msgid "listed programs"
 msgstr "programmes"
 
-#: canal/models.py:44
+#: canal/models.py:45
 msgid "name"
 msgstr "nom"
 
-#: canal/models.py:46
+#: canal/models.py:47
 msgid "starting time"
 msgstr "début"
 
-#: canal/models.py:53
+#: canal/models.py:54
 msgid "end date"
 msgstr "fin"
 
-#: canal/models.py:60
+#: canal/models.py:61
 msgid "list"
 msgstr "liste"
 
-#: canal/models.py:61
+#: canal/models.py:62
 msgid "lists"
 msgstr "listes"
