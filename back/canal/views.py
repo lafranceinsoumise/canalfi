@@ -12,7 +12,11 @@ class Schedule(View):
         response = JsonResponse({
             'referenceDate': schedules.first().start_date,
             'schedule': [
-                {'id': video.id, 'duration': video.duration} for schedule in schedules for video in schedule.videos.all()
+                {
+                    'id': video.id,
+                    'duration': video.duration,
+                    'thumbnail': video.yt_thumbnail
+                } for schedule in schedules for video in schedule.videos.all()
             ]
         })
         response["Access-Control-Allow-Origin"] = "*"
