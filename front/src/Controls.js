@@ -172,7 +172,6 @@ PositionBar.propTypes = {
   seekTo: PropTypes.func,
 };
 
-
 const Timer = ({currentTime, duration}) => (
   <span>{displayPosition(currentTime, duration)}</span>
 );
@@ -238,13 +237,38 @@ VolumeControl.propTypes = {
   volume: PropTypes.number
 };
 
+const ProgramList = ({controler}) => {
+  return <div className="controls__programlist">
+    <button
+      className="controls__programlist__leftScroll"
+      onClick={() => document.querySelector('.controls__programlist').scrollLeft -= 400}
+    ><i className="fa fa-arrow-left"></i></button>
+    <button
+      className="controls__programlist__rightScroll"
+      onClick={() => document.querySelector('.controls__programlist').scrollLeft += 400}
+    ><i className="fa fa-arrow-right"></i></button>
+    {controler.schedule.programs.map((p, i) =>
+      <div key={i} className={"controls__programlist__program" + (i === controler.currentProgram ? ' current' : '')}>
+        <img
+          src={p.thumbnail}
+          className="thumbnail"
+          onClick={() => controler.playVideo(i)}
+          alt=""
+        />
+        {(i === controler.currentProgram ? <i className="fa fa-play"></i> : '')}
+      </div>
+    )}
+  </div>
+};
+
 
 function ControlBar({controler, state, volume, muted, currentTime, duration, shown, onMouseEnter, onMouseLeave}) {
   return <div className={`controls ${shown ? 'shown': 'hidden'}`} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
+    <ProgramList controler={controler} />
     <PositionBar currentTime={currentTime} duration={duration} seekTo={controler.seekTo}/>
     <div className="controls__buttons">
-      <PlayPauseButton playing={[1, 3].includes(state)} playVideo={controler.playVideo} pauseVideo={controler.pauseVideo}/>
-      <VolumeControl volume={volume} muted={muted} mute={controler.mute} unMute={controler.unMute} setVolume={controler.setVolume}/>
+      <PlayPauseButton playing={[1, 3].includes(state)} playVideo={() => controler.playVideo()} pauseVideo={() => controler.pauseVideo()}/>
+      <VolumeControl volume={volume} muted={muted} mute={() => controler.mute} unMute={() => controler.unMute()} setVolume={() => controler.setVolume()}/>
       <Timer currentTime={currentTime} duration={duration}/>
       <button type="button" id="full-screen" onClick={controler.setFullscreen}>
         <i className="fas fa-expand" />

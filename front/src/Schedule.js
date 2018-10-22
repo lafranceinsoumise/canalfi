@@ -10,7 +10,7 @@ class Schedule {
       let duration = moment.duration(video.duration);
       let end = start + duration.asMilliseconds();
       this.programs.push({
-        id: video.id, start, end, duration
+        id: video.id, start, end, duration, thumbnail: video.thumbnail
       });
       start = end;
     }

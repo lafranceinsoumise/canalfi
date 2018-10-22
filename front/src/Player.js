@@ -73,10 +73,13 @@ class YTAPIController {
       videoId,
       playerVars: {
         rel: 0,
-        modestbranding: 1,
         showinfo: 0,
+        modestbranding: 1,
         controls: 0,
-        autoplay: 1
+        autoplay: 1,
+        iv_load_policy: 3,
+        playsinline: 1,
+        hl: 'fr_FR'
       },
       events: {
         onReady: signalReady,
@@ -89,8 +92,13 @@ class YTAPIController {
     });
   }
 
-  playVideo() {
-    this._YTplayer.playVideo();
+  playVideo(index) {
+    if (!index) {
+      return this._YTplayer.playVideo();
+    }
+
+    this.currentProgram = index;
+    this._YTplayer.loadVideoById(this.schedule.getYTId(this.currentProgram));
   }
 
   pauseVideo() {

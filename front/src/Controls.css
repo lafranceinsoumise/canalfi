@@ -16,9 +16,96 @@
     display: none;
 }
 
+/* Program list */
+
+.controls__programlist {
+    overflow-x: hidden;
+    overflow-y: hidden;
+    white-space: nowrap;
+    height: 30vh;
+    max-height: 16.875vw;
+    scroll-behavior: smooth;
+    display: block;
+}
+
+.controls__programlist__program {
+    display: inline-block;
+    max-height: 100%;
+    height: 100%;
+    opacity: 0.5;
+    transition: opacity 500ms;
+    position: relative;
+}
+
+.controls__programlist__program.current {
+    opacity: 1;
+}
+
+.controls__programlist__program:hover {
+    opacity: 1;
+}
+
+.controls__programlist__program > .thumbnail {
+    height: 100%;
+    max-height: 100%;
+}
+
+.controls__programlist__program > .fa-play {
+    text-align: center;
+    position: absolute;
+    color: rgba(255, 255, 255, 1);
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: 0;
+    margin-top: 10vh;
+    font-size: 10vh;
+}
+
+.controls__programlist__leftScroll,
+.controls__programlist__rightScroll {
+    position: absolute;
+    color: #bbb;
+    background-color: transparent;
+    border: 0;
+    transition: color 500ms;
+    font-weight: bolder;
+    z-index: 1000;
+    text-decoration: none;
+    font-size: 10vh;
+    margin-top: 10vh;
+}
+
+.controls__programlist__leftScroll {
+    left: 20px;
+}
+
+.controls__programlist__rightScroll {
+    right: 20px;
+}
+
+.controls__programlist__leftScroll:hover {
+    color: #fff;
+}
+
+.controls__programlist__rightScroll:hover {
+    color: #fff;
+}
+
+@media (max-width: 178vh) {
+    .controls__programlist__program > .fa-play,
+    .controls__programlist__leftScroll,
+    .controls__programlist__rightScroll {
+        font-size: 5.625vw;
+        margin-top: 5.625vw;
+    }
+}
+
+/* Buttons */
+
 .controls__buttons {
     z-index: 1000;
-    color: #DDD
+    color: #DDD;
 }
 
 .controls__buttons * {
@@ -59,6 +146,8 @@
 .volume-control .rangeslider .rangeslider__handle:after {
     content: none;
 }
+
+/* Progress bar */
 
 .progress-bar .rangeslider-horizontal {
     -webkit-border-radius: 0;
