@@ -5,6 +5,7 @@
   "dependencies": {
     "js-yaml": "^3.12.0",
     "moment": "^2.22.2",
+    "normalize.css": "^8.0.0",
     "prop-types": "^15.6.2",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
