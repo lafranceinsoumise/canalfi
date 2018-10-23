@@ -92,7 +92,11 @@ const withMouseActivity = addPropsStream(
   props$ => {
     const {handler: setMouseStatus, stream: mouseOverControls$} = createEventHandler();
 
-    const mouseMovedRecently$ = fromEvent(document, 'mousemove').pipe(
+    const mouseMovedRecently$ = merge(
+      fromEvent(document, 'mousemove'),
+      fromEvent(document, 'pointerdown'),
+      fromEvent(document, 'touchstart'),
+    ).pipe(
       switchMap(
         () => timer(1500).pipe(mapTo(false), startWith(true))
       ),
