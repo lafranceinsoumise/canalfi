@@ -271,8 +271,8 @@ function ControlBar({controler, state, volume, muted, currentTime, duration, sho
     <ProgramList controler={controler} />
     <PositionBar currentTime={currentTime} duration={duration} seekTo={controler.seekTo}/>
     <div className="controls__buttons">
-      <PlayPauseButton playing={[1, 3].includes(state)} playVideo={() => controler.playVideo()} pauseVideo={() => controler.pauseVideo()}/>
-      <VolumeControl volume={volume} muted={muted} mute={() => controler.mute} unMute={() => controler.unMute()} setVolume={() => controler.setVolume()}/>
+      <PlayPauseButton playing={[1, 3].includes(state)} playVideo={() => controler.playVideo()} pauseVideo={controler.pauseVideo} />
+      <VolumeControl volume={volume} muted={muted} mute={controler.mute} unMute={controler.unMute} setVolume={controler.setVolume} />
       <Timer currentTime={currentTime} duration={duration}/>
       <button type="button" id="full-screen" onClick={controler.setFullscreen}>
         <i className="fas fa-expand" />
