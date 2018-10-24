@@ -267,9 +267,10 @@ const ProgramList = ({controler}) => {
 
 
 function ControlBar({controler, state, volume, muted, currentTime, duration, shown, onMouseEnter, onMouseLeave}) {
-  return <div className={`controls ${shown ? 'shown': 'hidden'}`} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
+  return <div className={`controls ${shown ? 'shown': 'hidden'} ${[1, 3].includes(state) ? 'transparent' : 'opaque'}`}
+              onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
     <ProgramList controler={controler} />
-    <PositionBar currentTime={currentTime} duration={duration} seekTo={controler.seekTo}/>
+    <PositionBar currentTime={currentTime} duration={duration} seekTo={controler.seekTo} />
     <div className="controls__buttons">
       <PlayPauseButton playing={[1, 3].includes(state)} playVideo={() => controler.playVideo()} pauseVideo={controler.pauseVideo} />
       <VolumeControl volume={volume} muted={muted} mute={controler.mute} unMute={controler.unMute} setVolume={controler.setVolume} />

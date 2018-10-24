@@ -5,11 +5,16 @@
     z-index: 1000;
     background-color: rgba(50%, 50%, 50%, 0.5);
     opacity: 0;
-    transition: opacity 500ms;
+    transition: opacity 500ms, background-color 300ms;
 }
 
 .controls.shown {
     opacity: 1;
+}
+
+.controls.opaque {
+    opacity: 1;
+    background-color: rgba(50%, 50%, 50%, 1);
 }
 
 .controls .rangeslider .rangeslider__labels {

@@ -89,7 +89,9 @@ class YTAPIController {
     });
 
     this.ready.then(() => {
+      this._YTplayer.setVolume(0);
       this._YTplayer.seekTo(start);
+      return this._YTplayer.playVideo();
     });
   }
 
