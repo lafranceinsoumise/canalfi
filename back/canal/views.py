@@ -15,7 +15,8 @@ class Schedule(View):
                 {
                     'id': video.id,
                     'duration': video.duration,
-                    'thumbnail': video.yt_thumbnail
+                    'thumbnail': video.yt_thumbnail,
+                    'title': video.yt_title,
                 } for schedule in schedules for video in schedule.videos.all()
             ]
         })

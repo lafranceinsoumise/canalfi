@@ -259,6 +259,11 @@ const ProgramList = ({controler}) => {
           onClick={() => controler.playVideo(i)}
           alt=""
         />
+        <div className={"controls__programlist__program__info"} onClick={() => controler.playVideo(i)}>
+          <p>
+            {p.title}
+          </p>
+        </div>
         {(i === controler.currentProgram ? <i className="fa fa-play"></i> : '')}
       </div>
     )}
