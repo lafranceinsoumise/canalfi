@@ -1,5 +1,6 @@
 from django.db import models
 from django.db.models import Sum
+from django.utils.timezone import localtime
 from django.utils.translation import gettext as _
 
 from ordered_model.models import OrderedModel
@@ -50,7 +51,7 @@ class List(models.Model):
     def end_date(self):
         if self.start_date is None:
             return None
-        return self.start_date + self.duration
+        return localtime(self.start_date + self.duration)
     end_date.fget.short_description = _("end date")
 
     def __str__(self):
