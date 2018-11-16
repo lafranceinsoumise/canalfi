@@ -1,9 +1,13 @@
 from django.contrib import admin
+from django.db import transaction
+from django.http import Http404, HttpResponseRedirect, HttpResponseBadRequest
+from django.urls import path, reverse
 from django.utils.html import format_html
+from django.utils.safestring import mark_safe
 from django.utils.translation import gettext as _
 from ordered_model.admin import OrderedTabularInline, OrderedInlineModelAdminMixin
 
-from canal.models import Video, List, ListedProgram
+from canal.models import Video, List, ListedProgram, LiveStream
 
 
 @admin.register(Video)
@@ -54,3 +58,37 @@ class ListAdmin(OrderedInlineModelAdminMixin, admin.ModelAdmin):
     def duration(self, instance):
         return instance.duration
     duration.short_description = _("duration")
+
+@admin.register(LiveStream)
+class LiveStreamAdmin(admin.ModelAdmin):
+    list_display = ('yt_title', 'estimated_start_time', 'estimated_end_time', 'is_live')
+    readonly_fields = ('is_live', 'send_live_button', 'yt_title', 'display_thumbnail', 'yt_description')
+    exclude = ('yt_etag',)
+    fields = ('id', 'estimated_start_time', 'estimated_end_time', ) + readonly_fields
+
+    def send_live_button(self, instance):
+        if instance.id is None:
+            return mark_safe('-')
+        return format_html('<input type="submit" value="{}" name="send_live" />',
+                           _("Send live")
+                           )
+
+    def display_thumbnail(self, instance):
+        return format_html("<img src={} />", instance.yt_thumbnail)
+    display_thumbnail.short_description = _("Youtube thumbnail")
+
+    def change_view(self, request, object_id, form_url='', extra_context=None):
+        if not request.POST.get('send_live'):
+            return super().change_view(request, object_id, form_url, extra_context)
+
+        live_stream = self.get_object(request, object_id)
+
+        if live_stream is None:
+            raise Http404(_("No live stream with this ID."))
+
+        with transaction.atomic():
+            LiveStream.objects.all().update(is_live=False)
+            live_stream.is_live = True
+            live_stream.save()
+
+        return HttpResponseRedirect(reverse('admin:canal_livestream_change', args=[object_id]))
