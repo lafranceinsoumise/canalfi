@@ -15,7 +15,7 @@ class Schedule(View):
 
         return JsonResponse({
             'liveStream': live_stream.id if live_stream is not None else None,
-            'referenceDate': schedules[0].start_date if len(schedules) > 1 else None,
+            'referenceDate': schedules[0].start_date if len(schedules) > 0 else None,
             'schedule': [
                 {
                     'id': video.id,
