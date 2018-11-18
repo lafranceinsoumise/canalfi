@@ -122,3 +122,29 @@ STATIC_URL = os.environ.get('STATIC_URL', '/static/')
 STATIC_ROOT = os.environ.get('STATIC_ROOT')
 
 YOUTUBE_API_KEY = os.environ.get('YOUTUBE_API_KEY', 'Define it in .env')
+
+# Logging
+
+if not DEBUG:
+    LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'handlers': {
+            'journald': {
+                'level': 'DEBUG',
+                'class': 'systemd.journal.JournaldLogHandler',
+            }
+        },
+        'loggers': {
+            'django.template': {
+                'handlers': ['journald'],
+                'level': 'INFO',
+                'propagate': False,
+            },
+            'django': {
+                'handlers': ['journald'],
+                'level': 'DEBUG',
+                'propagate': True
+            }
+        }
+    }
