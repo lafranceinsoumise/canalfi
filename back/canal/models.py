@@ -15,6 +15,18 @@ from ordered_model.models import OrderedModel
 youtube = build('youtube', 'v3', developerKey=settings.YOUTUBE_API_KEY)
 
 
+class YTVideoDoesNotExist(ValidationError):
+    pass
+
+
+class YTVideoIsNotLiveStream(ValidationError):
+    pass
+
+
+class YTVideoIsLiveStream(ValidationError):
+    pass
+
+
 class AbstractVideo(models.Model):
     id = models.CharField(_("video ID"), max_length=11, primary_key=True)
     yt_etag = models.CharField(_("Youtube etag"), max_length=255)
@@ -31,7 +43,7 @@ class AbstractVideo(models.Model):
                 id=self.id
             ).execute()['items'][0]
         except IndexError:
-            raise ValidationError(_('This video does not exist.'))
+            raise YTVideoDoesNotExist(_('This video does not exist.'))
 
         self.yt_title = yt_infos['snippet']['title']
         self.yt_description = yt_infos['snippet']['description']
@@ -55,7 +67,7 @@ class Video(AbstractVideo):
 
         self.duration = parse_duration(yt_infos['contentDetails']['duration'])
         if self.duration == timedelta():
-            raise ValidationError(_('This video is a live stream.'))
+            raise YTVideoIsLiveStream(_('This video is a live stream.'))
 
     class Meta:
         verbose_name = _("video")
@@ -112,7 +124,7 @@ class LiveStream(AbstractVideo):
         yt_infos = super().clean()
 
         if parse_duration(yt_infos['contentDetails']['duration']) != timedelta():
-            raise ValidationError(_('This video is not a live stream.'))
+            raise YTVideoIsNotLiveStream(_('This video is not a live stream.'))
 
     class Meta:
         verbose_name = _("live stream")

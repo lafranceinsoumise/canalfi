@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.db import transaction
-from django.http import Http404, HttpResponseRedirect, HttpResponseBadRequest
+from django.http import HttpResponseRedirect
 from django.urls import path, reverse
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
@@ -70,7 +70,7 @@ class LiveStreamAdmin(admin.ModelAdmin):
     def send_live_button(self, instance):
         if instance.id is None:
             return mark_safe('-')
-        return format_html('<input type="submit" value="{}" name="send_live" />',
+        return format_html('<input type="submit" value="{}" name="_send_live" />',
                            _("Send live")
                            )
 
@@ -78,18 +78,13 @@ class LiveStreamAdmin(admin.ModelAdmin):
         return format_html("<img src={} />", instance.yt_thumbnail)
     display_thumbnail.short_description = _("Youtube thumbnail")
 
-    def change_view(self, request, object_id, form_url='', extra_context=None):
-        if not request.POST.get('send_live'):
-            return super().change_view(request, object_id, form_url, extra_context)
+    def response_change(self, request, live_stream):
+        if '_send_live' in request.POST:
+            with transaction.atomic():
+                LiveStream.objects.all().update(is_live=False)
+                live_stream.is_live = True
+                live_stream.save()
 
-        live_stream = self.get_object(request, object_id)
+            return HttpResponseRedirect(reverse('admin:canal_livestream_changelist'))
 
-        if live_stream is None:
-            raise Http404(_("No live stream with this ID."))
-
-        with transaction.atomic():
-            LiveStream.objects.all().update(is_live=False)
-            live_stream.is_live = True
-            live_stream.save()
-
-        return HttpResponseRedirect(reverse('admin:canal_livestream_changelist', args=[object_id]))
+        return super().response_change(request, live_stream)
