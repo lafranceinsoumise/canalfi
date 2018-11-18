@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import './App.css';
 import Player from './Player';
 import Schedule from './Schedule';
-import yaml from 'js-yaml';
 import {from} from 'rxjs';
 import {setObservableConfig} from 'recompose';
 
@@ -24,7 +23,7 @@ class App extends Component {
   }
 
   async componentDidMount() {
-    const schedule = new Schedule(yaml.safeLoad(await (await fetch(process.env.REACT_APP_SCHEDULE_URL)).text()));
+    const schedule = new Schedule(JSON.parse(await (await fetch(process.env.REACT_APP_SCHEDULE_URL)).text()));
     this.setState({schedule});
   }
 
