@@ -2,15 +2,19 @@ from django.http import JsonResponse
 from django.utils import timezone
 from django.views import View
 
-from canal.models import List
+from canal.models import List, LiveStream
 
 
 class Schedule(View):
     def get(self, request):
-        schedules = List.objects.filter(start_date__lt=timezone.now()).prefetch_related('videos')
-
+        current_schedule = List.objects.filter(start_date__lt=timezone.now())\
+            .order_by('-start_date').prefetch_related('videos').first()
+        next_schedules = List.objects.filter(start_date__gt=timezone.now()).prefetch_related('videos')
+        schedules = [current_schedule, *next_schedules]
+        live_stream = LiveStream.objects.filter(is_live=True).last()
         response = JsonResponse({
-            'referenceDate': schedules.first().start_date,
+            'liveStream': live_stream.id if live_stream is not None else None,
+            'referenceDate': current_schedule.start_date,
             'schedule': [
                 {
                     'id': video.id,

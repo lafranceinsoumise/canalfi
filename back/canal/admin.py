@@ -59,6 +59,7 @@ class ListAdmin(OrderedInlineModelAdminMixin, admin.ModelAdmin):
         return instance.duration
     duration.short_description = _("duration")
 
+
 @admin.register(LiveStream)
 class LiveStreamAdmin(admin.ModelAdmin):
     list_display = ('yt_title', 'estimated_start_time', 'estimated_end_time', 'is_live')
@@ -91,4 +92,4 @@ class LiveStreamAdmin(admin.ModelAdmin):
             live_stream.is_live = True
             live_stream.save()
 
-        return HttpResponseRedirect(reverse('admin:canal_livestream_change', args=[object_id]))
+        return HttpResponseRedirect(reverse('admin:canal_livestream_changelist', args=[object_id]))
