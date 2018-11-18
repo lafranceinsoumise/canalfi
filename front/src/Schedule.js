@@ -14,6 +14,8 @@ class Schedule {
       });
       start = end;
     }
+
+    this.live = data.liveStream;
   }
 
   getYTId(programIndex) {

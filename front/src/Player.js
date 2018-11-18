@@ -53,6 +53,7 @@ class YTAPIController {
   }
 
   playNextVideo() {
+    this.isLive = false;
     this.currentProgram = this.schedule.getNextProgramIndex(this.currentProgram);
     this._YTplayer.loadVideoById(this.schedule.getYTId(this.currentProgram));
   }
@@ -68,7 +69,7 @@ class YTAPIController {
 
     this.currentProgram = programIndex;
 
-    const videoId = this.schedule.getYTId(programIndex);
+    const videoId = this.schedule.live || this.schedule.getYTId(programIndex);
 
     window.YTPlayer = this._YTplayer = new YT.Player(this.ytElemId, {
       videoId,
@@ -90,7 +91,11 @@ class YTAPIController {
 
     this.ready.then(() => {
       this._YTplayer.setVolume(0);
-      this._YTplayer.seekTo(start);
+      if (!this.schedule.live) {
+        this._YTplayer.seekTo(start);
+      } else {
+        this.isLive = true;
+      }
       return this._YTplayer.playVideo();
     });
   }
@@ -129,10 +134,18 @@ class YTAPIController {
   }
 
   getCurrentTime() {
+    if (this.isLive) {
+      return false;
+    }
+
     return this._YTplayer.getCurrentTime();
   }
 
   getDuration() {
+    if (this.isLive) {
+      return false;
+    }
+
     return this._YTplayer.getDuration();
   }
 
