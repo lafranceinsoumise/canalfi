@@ -10,11 +10,12 @@ class Schedule(View):
         current_schedule = List.objects.filter(start_date__lt=timezone.now())\
             .order_by('-start_date').prefetch_related('videos').first()
         next_schedules = List.objects.filter(start_date__gt=timezone.now()).prefetch_related('videos')
-        schedules = [current_schedule, *next_schedules]
+        schedules = [current_schedule, *next_schedules] if current_schedule else next_schedules
         live_stream = LiveStream.objects.filter(is_live=True).last()
-        response = JsonResponse({
+
+        return JsonResponse({
             'liveStream': live_stream.id if live_stream is not None else None,
-            'referenceDate': current_schedule.start_date,
+            'referenceDate': schedules[0].start_date if len(schedules) > 1 else None,
             'schedule': [
                 {
                     'id': video.id,
@@ -24,6 +25,3 @@ class Schedule(View):
                 } for schedule in schedules for video in schedule.videos.all()
             ]
         })
-        response["Access-Control-Allow-Origin"] = "*"
-
-        return response
