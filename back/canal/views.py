@@ -14,7 +14,11 @@ class Schedule(View):
         live_stream = LiveStream.objects.filter(is_live=True).last()
 
         return JsonResponse({
-            'liveStream': live_stream.id if live_stream is not None else None,
+            'liveStream': {
+                'id': live_stream.id,
+                'thumbnail': live_stream.yt_thumbnail,
+                'title': live_stream.yt_title,
+            } if live_stream is not None else None,
             'referenceDate': schedules[0].start_date if len(schedules) > 0 else None,
             'schedule': [
                 {

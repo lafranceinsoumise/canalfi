@@ -69,7 +69,7 @@ class YTAPIController {
 
     this.currentProgram = programIndex;
 
-    const videoId = this.schedule.live || this.schedule.getYTId(programIndex);
+    const videoId = (this.schedule.live && this.schedule.live.id) || this.schedule.getYTId(programIndex);
 
     window.YTPlayer = this._YTplayer = new YT.Player(this.ytElemId, {
       videoId,

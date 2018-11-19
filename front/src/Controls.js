@@ -9,7 +9,7 @@ import moment from 'moment';
 import './Controls.css';
 
 const LOCALE = 'fr-FR';
-
+require('moment/locale/fr');
 
 function displayDuration(d, showHours) {
   let res = '';
@@ -241,6 +241,24 @@ VolumeControl.propTypes = {
   volume: PropTypes.number
 };
 
+const ProgramThumbnail = ({program: p, isCurrent, onClick}) => {
+  return <div className={"controls__programlist__program" + (isCurrent ? ' current' : '')}>
+    <img
+      src={p.thumbnail}
+      className="thumbnail"
+      alt=""
+      onClick={onClick}
+    />
+    <div className={"controls__programlist__program__info"} onClick={onClick}>
+      <p>
+        {p.title}
+      </p>
+      <p>{moment(p.start_date).format('LT')}</p>
+    </div>
+    {isCurrent && <i className="fa fa-play"></i>}
+  </div>
+};
+
 const ProgramList = ({controler}) => {
   return <div className="controls__programlist">
     <button
@@ -251,21 +269,11 @@ const ProgramList = ({controler}) => {
       className="controls__programlist__rightScroll"
       onClick={() => document.querySelector('.controls__programlist').scrollLeft += 400}
     ><i className="fa fa-arrow-right"></i></button>
+    {controler.schedule.live &&
+        <ProgramThumbnail program={controler.schedule.live} isCurrent={true}/>
+    }
     {controler.schedule.programs.map((p, i) =>
-      <div key={i} className={"controls__programlist__program" + (i === controler.currentProgram ? ' current' : '')}>
-        <img
-          src={p.thumbnail}
-          className="thumbnail"
-          onClick={() => controler.playVideo(i)}
-          alt=""
-        />
-        <div className={"controls__programlist__program__info"} onClick={() => controler.playVideo(i)}>
-          <p>
-            {p.title}
-          </p>
-        </div>
-        {(i === controler.currentProgram ? <i className="fa fa-play"></i> : '')}
-      </div>
+      <ProgramThumbnail key={i} program={p} isCurrent={i === controler.currentProgram} onClick={() => controler.playVideo(i)} />
     )}
   </div>
 };
