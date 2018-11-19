@@ -27,7 +27,16 @@ async function loadYT() {
 
 let YTPromise = null;
 
-export default function getYT() {
+
+export async function getCast() {
+  if (!(typeof window.cast === 'object') || !(typeof window.cast.framework.CastContext === 'object')) {
+    await loadScript('https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1');
+  }
+
+  return window.cast;
+}
+
+export function getYT() {
   if (!YTPromise) {
     YTPromise = loadYT();
   }

@@ -291,6 +291,12 @@ function ControlBar({controler, state, volume, muted, currentTime, duration, sho
       <button type="button" id="full-screen" onClick={controler.setFullscreen}>
         <i className="fas fa-expand" />
       </button>
+      <google-cast-launcher style={{
+        display: 'inline-block',
+        width: '44px',
+        height: '44px',
+        float: 'right',
+      }}></google-cast-launcher>
     </div>
   </div>;
 }

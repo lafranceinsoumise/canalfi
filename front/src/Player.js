@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {createEventHandler} from 'recompose';
 
-import getYT from './loadYT';
+import {getYT, getCast} from './loadYT';
 import Controls from './Controls';
 import './Player.css';
 
@@ -64,6 +64,7 @@ class YTAPIController {
 
   async load(signalReady, stateHandler) {
     const YT = await getYT();
+    getCast();
 
     const {programIndex, start} = this.schedule.getStartingProgram();
 
@@ -98,6 +99,15 @@ class YTAPIController {
       }
       return this._YTplayer.playVideo();
     });
+
+    window['__onGCastApiAvailable'] = async (isAvailable) => {
+      if (isAvailable) {
+        const cast = await getCast();
+        cast.framework.CastContext.getInstance().setOptions({
+          receiverApplicationId: process.env.REACT_APP_CHROMECAST_APP_ID
+        });
+      }
+    };
   }
 
   playVideo(index) {
