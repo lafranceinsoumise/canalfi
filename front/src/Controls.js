@@ -283,11 +283,11 @@ function ControlBar({controler, state, volume, muted, currentTime, duration, sho
   return <div className={`controls ${shown ? 'shown': 'hidden'} ${[1, 3].includes(state) ? 'transparent' : 'opaque'}`}
               onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
     <ProgramList controler={controler} />
-    {currentTime && duration && <PositionBar currentTime={currentTime} duration={duration} seekTo={controler.seekTo} />}
+    {!!(currentTime && duration) && <PositionBar currentTime={currentTime} duration={duration} seekTo={controler.seekTo} />}
     <div className="controls__buttons">
       <PlayPauseButton playing={[1, 3].includes(state)} playVideo={() => controler.playVideo()} pauseVideo={controler.pauseVideo} />
       <VolumeControl volume={volume} muted={muted} mute={controler.mute} unMute={controler.unMute} setVolume={controler.setVolume} />
-      {currentTime && duration && <Timer currentTime={currentTime} duration={duration}/>}
+      {!!(currentTime && duration) && <Timer currentTime={currentTime} duration={duration}/>}
       <button type="button" id="full-screen" onClick={controler.setFullscreen}>
         <i className="fas fa-expand" />
       </button>

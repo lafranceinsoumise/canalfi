@@ -1,9 +1,13 @@
 import React, {Component} from 'react';
 import {createEventHandler} from 'recompose';
 
-import {getYT, getCast} from './loadYT';
+import { getYT } from './loadYT';
 import Controls from './Controls';
 import './Player.css';
+import App from './App';
+import Schedule from './Schedule';
+import Receiver from './chromecast/Receiver'
+import Sender from './chromecast/Sender';
 
 
 function fullScreen(id) {
@@ -21,18 +25,19 @@ function fullScreen(id) {
 
 
 class YTAPIController {
-  constructor(ytElemId, elemId, schedule) {
+  constructor(ytElemId, elemId, mode) {
+    this.mode = mode;
     this.ytElemId = ytElemId;
     this.elemId = elemId;
     let signalReady;
     const {handler: stateHandler, stream: state$} = createEventHandler();
+    this.stateHandler = stateHandler;
 
     this.ready = new Promise(resolve => signalReady = resolve);
-    this.schedule = schedule;
     this._YTplayer = null;
 
     this.state$ = state$;
-    this.load(signalReady, stateHandler);
+    this.load(signalReady);
 
     const boundMethods = [
       'playVideo', 'pauseVideo', 'seekTo', 'setVolume', 'mute', 'unMute', 'isMuted', 'getCurrentTime', 'getDuration',
@@ -62,9 +67,14 @@ class YTAPIController {
     fullScreen(this.elemId);
   }
 
-  async load(signalReady, stateHandler) {
+  async load(signalReady) {
+    if (this.mode === App.RECEIVER_MODE) {
+      this.chromecastReceiver = new Receiver(this);
+      this.schedule = new Schedule(await this.chromecastReceiver.load());
+    } else {
+      this.schedule = new Schedule(JSON.parse(await (await fetch(process.env.REACT_APP_SCHEDULE_URL)).text()));
+    }
     const YT = await getYT();
-    getCast();
 
     const {programIndex, start} = this.schedule.getStartingProgram();
 
@@ -86,12 +96,18 @@ class YTAPIController {
       },
       events: {
         onReady: signalReady,
-        onStateChange: e => stateHandler(e.data)
+        onStateChange: e => this.stateHandler(e.data)
       }
     });
 
     this.ready.then(() => {
-      this._YTplayer.setVolume(0);
+      this.playerInterface = this._YTplayer;
+
+      if (this.mode !== App.RECEIVER_MODE) {
+        this._YTplayer.setVolume(0);
+        this.chromecastSender = new Sender(this);
+      }
+
       if (!this.schedule.live) {
         this._YTplayer.seekTo(start);
       } else {
@@ -99,15 +115,6 @@ class YTAPIController {
       }
       return this._YTplayer.playVideo();
     });
-
-    window['__onGCastApiAvailable'] = async (isAvailable) => {
-      if (isAvailable) {
-        const cast = await getCast();
-        cast.framework.CastContext.getInstance().setOptions({
-          receiverApplicationId: process.env.REACT_APP_CHROMECAST_APP_ID
-        });
-      }
-    };
   }
 
   playVideo(index) {
@@ -128,19 +135,28 @@ class YTAPIController {
   }
 
   setVolume(volume) {
-    this._YTplayer.setVolume(volume);
+    this.playerInterface.setVolume(volume);
+  }
+
+  setMode(mode) {
+    this.mode = mode;
+
+    if (mode === App.CONTROL_MODE) {
+      this._YTplayer.pauseVideo();
+      this.playerInterface = this.chromecastSender;
+    }
   }
 
   mute() {
-    this._YTplayer.mute();
+    this.playerInterface.mute();
   }
 
   unMute() {
-    this._YTplayer.unMute();
+    this.playerInterface.unMute();
   }
 
   isMuted() {
-    return this._YTplayer.isMuted();
+    return this.playerInterface.isMuted();
   }
 
   getCurrentTime() {
@@ -160,7 +176,15 @@ class YTAPIController {
   }
 
   getVolume() {
-    return this._YTplayer.getVolume();
+    return this.playerInterface.getVolume();
+  }
+
+  getMode() {
+    return this.mode;
+  }
+
+  isPlaying() {
+
   }
 }
 
@@ -171,7 +195,7 @@ class PlayerComponent extends Component {
   }
 
   async componentDidMount() {
-    const controler = new YTAPIController('ytplayer', 'player', this.props.schedule);
+    const controler = new YTAPIController('ytplayer', 'player', this.props.startingMode);
     this.setState({controler});
   }
 

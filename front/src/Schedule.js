@@ -2,6 +2,7 @@ import moment from 'moment';
 
 class Schedule {
   constructor(data) {
+    this.data = data;
     this.referenceDate = moment(data.referenceDate);
     this.programs = [];
 

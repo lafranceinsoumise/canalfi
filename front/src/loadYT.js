@@ -27,10 +27,11 @@ async function loadYT() {
 
 let YTPromise = null;
 
-
+let loadedCastSender = false;
 export async function getCast() {
-  if (!(typeof window.cast === 'object') || !(typeof window.cast.framework.CastContext === 'object')) {
+  if (!loadedCastSender) {
     await loadScript('https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1');
+    loadedCastSender = true;
   }
 
   return window.cast;
@@ -41,4 +42,14 @@ export function getYT() {
     YTPromise = loadYT();
   }
   return YTPromise;
+}
+
+let loadedCastReceiver = false;
+export async function getCastReceiver() {
+  if (!loadedCastReceiver) {
+    await loadScript('https://www.gstatic.com/cast/sdk/libs/caf_receiver/v3/cast_receiver_framework.js');
+    loadedCastReceiver = true;
+  }
+
+  return window.cast;
 }
