@@ -255,13 +255,12 @@ class CastButton extends React.Component {
         className="cast-button"
       >
         <google-cast-launcher />
-        {this.state.shown && "Regarder sur ma télévision"}
       </span>
     );
   }
 }
 
-const ProgramThumbnail = ({program: p, startDate, isCurrent, onClick}) => {
+const ProgramThumbnail = ({program: p, startDate, isCurrent, isLoaded, onClick}) => {
   return <div className={"controls__programlist__program" + (isCurrent ? ' current' : '')}>
     <img
       src={p.thumbnail}
@@ -275,47 +274,59 @@ const ProgramThumbnail = ({program: p, startDate, isCurrent, onClick}) => {
       </p>
       <p>{moment(startDate).format('LT')}</p>
     </div>
-    {isCurrent && <i className="fa fa-play"></i>}
+    {isLoaded && <i className="fa fa-play"></i>}
   </div>
 };
 
 class ProgramList extends Component {
   componentDidMount() {
     setImmediate(() => {
-      let {left} = document
+      let {left} = document.getElementsByClassName('controls__programlist__schedule__list')[0]
         .getElementsByClassName('controls__programlist__program current')[0]
         .getBoundingClientRect();
 
       if (left > document.documentElement.clientWidth/2) {
-        document.querySelector('.controls__programlist').scrollLeft += left - 100;
+        document.querySelector('.controls__programlist__schedule__list').scrollLeft += left - 100;
       }
     });
   }
 
   render () {
     return <div className="controls__programlist">
-      <button
-        className="controls__programlist__leftScroll"
-        onClick={() => document.querySelector(
-          '.controls__programlist').scrollLeft -= 400}
-      ><i className="fa fa-arrow-left"></i></button>
-      <button
-        className="controls__programlist__rightScroll"
-        onClick={() => document.querySelector(
-          '.controls__programlist').scrollLeft += 400}
-      ><i className="fa fa-arrow-right"></i></button>
-      {this.props.controler.schedule.live &&
-      <ProgramThumbnail program={this.props.controler.schedule.live}
-                        isCurrent={true}/>
+      {this.props.controler.schedule.live && this.props.controler.schedule.live.id &&
+        <div className="controls__programlist__live">
+          <p>En direct</p>
+          <ProgramThumbnail
+            program={this.props.controler.schedule.live}
+            isCurrent={true}
+            isLoaded={this.props.controler.isLive}
+            onClick={() => this.props.controler.playLive()}
+          />
+        </div>
       }
-      {this.props.controler.schedule.programs.map((p, i) =>
-        <ProgramThumbnail key={i}
-                          program={p}
-                          startDate={this.props.controler.schedule.start +
-                          p.start}
-                          isCurrent={i === this.props.controler.currentProgram}
-                          onClick={() => this.props.controler.playVideo(i)}/>
-      )}
+      <div className="controls__programlist__schedule">
+        <button
+          className="controls__programlist__leftScroll"
+          onClick={() => document.querySelector(
+            '.controls__programlist__schedule__list').scrollLeft -= 400}
+        ><i className="fa fa-arrow-left"></i></button>
+        <button
+          className="controls__programlist__rightScroll"
+          onClick={() => document.querySelector(
+            '.controls__programlist__schedule__list').scrollLeft += 400}
+        ><i className="fa fa-arrow-right"></i></button>
+        <div className="controls__programlist__schedule__list">
+          {this.props.controler.schedule.programs.map((p, i) =>
+            <ProgramThumbnail key={i}
+                              program={p}
+                              startDate={this.props.controler.schedule.start +
+                              p.start}
+                              isCurrent={i === this.props.controler.currentProgram}
+                              isLoaded={i === this.props.controler.currentProgram && !this.props.controler.isLive}
+                              onClick={() => this.props.controler.playVideo(i)}/>
+          )}
+        </div>
+      </div>
     </div>
   }
 };

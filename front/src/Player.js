@@ -57,30 +57,25 @@ class YTAPIController {
     );
   }
 
-  playNextVideo() {
-    this.isLive = false;
-    this.currentProgram = this.schedule.getNextProgramIndex(this.currentProgram);
-    this._YTplayer.loadVideoById(this.schedule.getYTId(this.currentProgram));
-  }
-
-  setFullscreen() {
-    fullScreen(this.elemId);
-  }
-
   async load(signalReady) {
     if (this.mode === App.RECEIVER_MODE) {
       this.chromecastReceiver = new Receiver(this);
       this.schedule = new Schedule(await this.chromecastReceiver.load());
     } else {
       this.schedule = new Schedule(JSON.parse(await (await fetch(process.env.REACT_APP_SCHEDULE_URL)).text()));
+
     }
     const YT = await getYT();
 
-    const {programIndex, start} = this.schedule.getStartingProgram();
-
+    let videoId;
+    let {programIndex, start} = this.schedule.getStartingProgram();
     this.currentProgram = programIndex;
-
-    const videoId = (this.schedule.live && this.schedule.live.id) || this.schedule.getYTId(programIndex);
+    if (this.schedule.live && this.schedule.live.id) {
+      videoId = this.schedule.live.id;
+      this.isLive = true;
+    } else {
+      videoId = this.schedule.getYTId(programIndex);
+    }
 
     window.YTPlayer = this._YTplayer = new YT.Player(this.ytElemId, {
       videoId,
@@ -108,13 +103,36 @@ class YTAPIController {
         this.chromecastSender = new Sender(this);
       }
 
-      if (!this.schedule.live) {
+      if (!this.isLive) {
         this._YTplayer.seekTo(start);
-      } else {
-        this.isLive = true;
       }
       return this._YTplayer.playVideo();
     });
+  }
+
+  setFullscreen() {
+    fullScreen(this.elemId);
+  }
+
+  playNextVideo() {
+    if (this.isLive) {
+      this.isLive = false;
+      let {index, start} = this.schedule.getStartingProgram();
+      this.currentProgram = index;
+      this._YTplayer.loadVideoById(this.schedule.getYTId(index));
+      this._YTplayer.seekTo(start);
+
+      return;
+    }
+
+    this._YTplayer.loadVideoById(this.schedule.getYTId(this.currentProgram));
+  }
+
+  playLive() {
+    if (this.schedule.live && this.schedule.live.id) {
+      this._YTplayer.loadVideoById(this.schedule.live.id);
+      this.isLive = true;
+    }
   }
 
   playVideo(index) {
@@ -122,6 +140,7 @@ class YTAPIController {
       return this._YTplayer.playVideo();
     }
 
+    this.isLive = false;
     this.currentProgram = index;
     this._YTplayer.loadVideoById(this.schedule.getYTId(this.currentProgram));
   }
@@ -161,7 +180,7 @@ class YTAPIController {
 
   getCurrentTime() {
     if (this.isLive) {
-      return false;
+      return 0;
     }
 
     return this._YTplayer.getCurrentTime();
@@ -169,7 +188,7 @@ class YTAPIController {
 
   getDuration() {
     if (this.isLive) {
-      return false;
+      return 0;
     }
 
     return this._YTplayer.getDuration();
@@ -181,10 +200,6 @@ class YTAPIController {
 
   getMode() {
     return this.mode;
-  }
-
-  isPlaying() {
-
   }
 }
 
