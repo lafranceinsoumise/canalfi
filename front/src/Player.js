@@ -63,7 +63,6 @@ class YTAPIController {
       this.schedule = new Schedule(await this.chromecastReceiver.load());
     } else {
       this.schedule = new Schedule(JSON.parse(await (await fetch(process.env.REACT_APP_SCHEDULE_URL)).text()));
-
     }
     const YT = await getYT();
 
@@ -108,6 +107,21 @@ class YTAPIController {
       }
       return this._YTplayer.playVideo();
     });
+
+    setInterval(this.updateSchedule.bind(this), 5000);
+  }
+
+  async updateSchedule() {
+    let previousSchedule = this.schedule;
+    this.schedule = new Schedule(JSON.parse(await (await fetch(process.env.REACT_APP_SCHEDULE_URL)).text()));
+
+    if (!previousSchedule.live && this.schedule.live && this.schedule.live.id) {
+      this.playLive();
+    }
+
+    if (this.isLive && !(previousSchedule.live && previousSchedule.live.id)) {
+      this.playNextVideo();
+    }
   }
 
   setFullscreen() {
@@ -130,8 +144,8 @@ class YTAPIController {
 
   playLive() {
     if (this.schedule.live && this.schedule.live.id) {
-      this._YTplayer.loadVideoById(this.schedule.live.id);
       this.isLive = true;
+      this._YTplayer.loadVideoById(this.schedule.live.id);
     }
   }
 
