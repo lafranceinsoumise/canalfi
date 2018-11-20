@@ -118,7 +118,7 @@ class YTAPIController {
   }
 
   playVideo(index) {
-    if (!index) {
+    if (typeof index === 'undefined') {
       return this._YTplayer.playVideo();
     }
 
