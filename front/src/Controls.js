@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {createEventHandler, mapPropsStream, compose, componentFromStream} from 'recompose';
 import {from, interval, merge, combineLatest, fromEvent, timer} from 'rxjs';
@@ -261,7 +261,7 @@ class CastButton extends React.Component {
   }
 }
 
-const ProgramThumbnail = ({program: p, isCurrent, onClick}) => {
+const ProgramThumbnail = ({program: p, startDate, isCurrent, onClick}) => {
   return <div className={"controls__programlist__program" + (isCurrent ? ' current' : '')}>
     <img
       src={p.thumbnail}
@@ -273,29 +273,51 @@ const ProgramThumbnail = ({program: p, isCurrent, onClick}) => {
       <p>
         {p.title}
       </p>
-      <p>{moment(p.start_date).format('LT')}</p>
+      <p>{moment(startDate).format('LT')}</p>
     </div>
     {isCurrent && <i className="fa fa-play"></i>}
   </div>
 };
 
-const ProgramList = ({controler}) => {
-  return <div className="controls__programlist">
-    <button
-      className="controls__programlist__leftScroll"
-      onClick={() => document.querySelector('.controls__programlist').scrollLeft -= 400}
-    ><i className="fa fa-arrow-left"></i></button>
-    <button
-      className="controls__programlist__rightScroll"
-      onClick={() => document.querySelector('.controls__programlist').scrollLeft += 400}
-    ><i className="fa fa-arrow-right"></i></button>
-    {controler.schedule.live &&
-        <ProgramThumbnail program={controler.schedule.live} isCurrent={true}/>
-    }
-    {controler.schedule.programs.map((p, i) =>
-      <ProgramThumbnail key={i} program={p} isCurrent={i === controler.currentProgram} onClick={() => controler.playVideo(i)} />
-    )}
-  </div>
+class ProgramList extends Component {
+  componentDidMount() {
+    setImmediate(() => {
+      let {left} = document
+        .getElementsByClassName('controls__programlist__program current')[0]
+        .getBoundingClientRect();
+
+      if (left > document.documentElement.clientWidth/2) {
+        document.querySelector('.controls__programlist').scrollLeft += left - 100;
+      }
+    });
+  }
+
+  render () {
+    return <div className="controls__programlist">
+      <button
+        className="controls__programlist__leftScroll"
+        onClick={() => document.querySelector(
+          '.controls__programlist').scrollLeft -= 400}
+      ><i className="fa fa-arrow-left"></i></button>
+      <button
+        className="controls__programlist__rightScroll"
+        onClick={() => document.querySelector(
+          '.controls__programlist').scrollLeft += 400}
+      ><i className="fa fa-arrow-right"></i></button>
+      {this.props.controler.schedule.live &&
+      <ProgramThumbnail program={this.props.controler.schedule.live}
+                        isCurrent={true}/>
+      }
+      {this.props.controler.schedule.programs.map((p, i) =>
+        <ProgramThumbnail key={i}
+                          program={p}
+                          startDate={this.props.controler.schedule.start +
+                          p.start}
+                          isCurrent={i === this.props.controler.currentProgram}
+                          onClick={() => this.props.controler.playVideo(i)}/>
+      )}
+    </div>
+  }
 };
 
 

@@ -19,7 +19,8 @@ class Schedule(View):
                 'thumbnail': live_stream.yt_thumbnail,
                 'title': live_stream.yt_title,
             } if live_stream is not None else None,
-            'referenceDate': schedules[0].start_date if len(schedules) > 0 else None,
+            'start': schedules[0].start_date if len(schedules) > 0 else None,
+            'end': schedules[-1].end_date if len(schedules) > 0 else None,
             'schedule': [
                 {
                     'id': video.id,

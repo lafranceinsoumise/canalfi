@@ -3,17 +3,29 @@ import moment from 'moment';
 class Schedule {
   constructor(data) {
     this.data = data;
-    this.referenceDate = moment(data.referenceDate);
+    this.start = moment(data.start);
+    this.end = moment(data.end);
+
+    while (this.end < moment()) {
+      let totalDuration = this.end - this.start;
+      this.end += totalDuration ;
+      this.start += totalDuration;
+    }
+
     this.programs = [];
 
-    let start = 0;
     for (let video of data.schedule) {
+      let start = this.programs.length > 0 ? this.programs[this.programs.length-1].end : 0;
       let duration = moment.duration(video.duration);
       let end = start + duration.asMilliseconds();
       this.programs.push({
-        id: video.id, start, end, duration, thumbnail: video.thumbnail, title: video.title
+        id: video.id,
+        start,
+        end,
+        duration,
+        thumbnail: video.thumbnail,
+        title: video.title
       });
-      start = end;
     }
 
     this.live = data.liveStream;
@@ -28,15 +40,12 @@ class Schedule {
   }
 
   getStartingProgram() {
-    const now = moment();
-    const elapsed = now - this.referenceDate;  // in milliseconds
-    const totalDuration = this.programs[this.programs.length -1].end;
-    const programPosition = elapsed % totalDuration;
-    const programIndex = this.programs.findIndex(p => p.start <= programPosition && programPosition < p.end);
+    const elapsed = moment() - this.start;  // in milliseconds
+    const programIndex = this.programs.findIndex(p => p.start <= elapsed && elapsed < p.end);
 
     return {
       programIndex,
-      start: (programPosition - this.programs[programIndex].start) / 1000
+      start: (elapsed - this.programs[programIndex].start) / 1000
     };
   }
 }

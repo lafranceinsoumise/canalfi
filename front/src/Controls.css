@@ -28,7 +28,7 @@
     overflow-y: hidden;
     white-space: nowrap;
     height: 30vh;
-    max-height: 16.875vw;
+    max-height: calc(30 * 9/16*1vw);
     scroll-behavior: smooth;
     display: block;
 }
@@ -37,6 +37,8 @@
     display: inline-block;
     max-height: 100%;
     height: 100%;
+    width: calc(4/3*30vh);
+    max-width: calc(4/3 * 30 * 9/16*1vw);
     opacity: 0.5;
     transition: opacity 500ms;
     position: relative;
