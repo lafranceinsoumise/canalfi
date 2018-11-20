@@ -149,7 +149,7 @@
     color: #DDD;
 }
 
-.controls__buttons * {
+.controls__buttons > * {
     font: 16px/1.5 sans-serif ;
     display: inline-block;
 }
@@ -186,6 +186,15 @@
 
 .volume-control .rangeslider .rangeslider__handle:after {
     content: none;
+}
+
+.cast-button google-cast-launcher {
+    --disconnected-color: white;
+    height: 20px;
+    margin-bottom: 5px;
+    width: 30px;
+    display: inline-block;
+    vertical-align: middle;
 }
 
 /* Progress bar */

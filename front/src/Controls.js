@@ -241,6 +241,26 @@ VolumeControl.propTypes = {
   volume: PropTypes.number
 };
 
+class CastButton extends React.Component {
+  constructor () {
+    super();
+    this.state = {shown: false};
+  }
+
+  render() {
+    return (
+      <span
+        onMouseEnter={() => this.setState({shown: true})}
+        onMouseLeave={() => this.setState({shown: false})}
+        className="cast-button"
+      >
+        <google-cast-launcher />
+        {this.state.shown && "Regarder sur ma télévision"}
+      </span>
+    );
+  }
+}
+
 const ProgramThumbnail = ({program: p, isCurrent, onClick}) => {
   return <div className={"controls__programlist__program" + (isCurrent ? ' current' : '')}>
     <img
@@ -291,12 +311,7 @@ function ControlBar({controler, state, volume, muted, currentTime, duration, sho
       <button type="button" id="full-screen" onClick={controler.setFullscreen}>
         <i className="fas fa-expand" />
       </button>
-      <google-cast-launcher style={{
-        display: 'inline-block',
-        width: '44px',
-        height: '44px',
-        float: 'right',
-      }}></google-cast-launcher>
+      <CastButton />
     </div>
   </div>;
 }
