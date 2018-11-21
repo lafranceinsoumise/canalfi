@@ -98,7 +98,6 @@ class YTAPIController {
       this.playerInterface = this._YTplayer;
 
       if (this.mode !== App.RECEIVER_MODE) {
-        this._YTplayer.setVolume(0);
         this.chromecastSender = new Sender(this);
       }
 
