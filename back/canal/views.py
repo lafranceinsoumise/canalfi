@@ -1,11 +1,13 @@
 from django.http import JsonResponse
 from django.utils import timezone
 from django.views import View
+from django.views.decorators.cache import cache_control
 
 from canal.models import List, LiveStream
 
 
 class Schedule(View):
+    @cache_control(max_age=5, public=True)
     def get(self, request):
         current_schedule = List.objects.filter(start_date__lt=timezone.now())\
             .order_by('-start_date').prefetch_related('videos').first()
