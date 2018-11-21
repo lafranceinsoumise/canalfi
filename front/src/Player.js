@@ -138,6 +138,7 @@ class YTAPIController {
       return;
     }
 
+    this.currentProgram = this.schedule.getNextProgramIndex(this.currentProgram);
     this._YTplayer.loadVideoById(this.schedule.getYTId(this.currentProgram));
   }
 
