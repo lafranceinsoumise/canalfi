@@ -216,23 +216,32 @@ class YTAPIController {
   getMode() {
     return this.mode;
   }
+
+  getPlayerState() {
+    return this._YTplayer.getPlayerState();
+  }
 }
 
 class PlayerComponent extends Component {
   constructor(props) {
     super(props);
-    this.state = {controler: null};
+    const controler = new YTAPIController('ytplayer', 'player', this.props.startingMode);
+    this.state = {controler};
   }
 
-  async componentDidMount() {
-    const controler = new YTAPIController('ytplayer', 'player', this.props.startingMode);
-    this.setState({controler});
+  videoClick () {
+    if ([1, 3].includes(this.state.controler.getPlayerState())) {
+      return this.state.controler.pauseVideo();
+    }
+
+    return this.state.controler.playVideo();
   }
 
   render() {
     return (
       <div className="video-container" id="player">
-        <div id="ytplayer"/>
+        <div id="ytplayer" />
+        <div className="video-click-catcher" onClick={async () => {this.videoClick()}} />
         <Controls controler={this.state.controler}/>
       </div>
     );
