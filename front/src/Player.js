@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {createEventHandler} from 'recompose';
+import qs from 'qs'
 
 import { getYT } from './loadYT';
 import Controls from './Controls';
@@ -98,7 +99,11 @@ class YTAPIController {
       this.playerInterface = this._YTplayer;
 
       if (this.mode !== App.RECEIVER_MODE) {
-        this._YTplayer.mute();
+        if (qs.parse(window.location.search.slice(1)).volume) {
+          this.setVolume(qs.parse(window.location.search.slice(1)).volume)
+        } else {
+          this._YTplayer.mute();
+        }
         this.chromecastSender = new Sender(this);
       }
 
