@@ -41,8 +41,20 @@ class ListAdmin(OrderedInlineModelAdminMixin, admin.ModelAdmin):
     filter_horizontal = ('videos',)
     readonly_fields = ('duration', 'end_date')
     list_display = ('name', 'start_date', 'duration', 'end_date')
-    actions = ['auto_reschedule']
+    actions = ['auto_reschedule', 'duplicate']
     inlines = [ListedProgramInline]
+
+    def duplicate(self, request, queryset):
+        for video_list in queryset:
+            programs_qs = video_list.programs.all()
+            video_list.pk = None
+            video_list.start_date = video_list.end_date
+            video_list.save()
+            for program in programs_qs:
+                program.pk = None
+                program.list = video_list
+                program.save()
+    duplicate.short_description = _("Duplicate")
 
     def auto_reschedule(self, request, queryset):
         previous = List.objects.exclude(id__in=queryset.values('id')).first()
