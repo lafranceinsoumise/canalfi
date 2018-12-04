@@ -123,9 +123,6 @@ class LiveStream(AbstractVideo):
     def clean(self):
         yt_infos = super().clean()
 
-        if parse_duration(yt_infos['contentDetails']['duration']) != timedelta():
-            raise YTVideoIsNotLiveStream(_('This video is not a live stream.'))
-
     class Meta:
         verbose_name = _("live stream")
         verbose_name_plural = _("live streams")
